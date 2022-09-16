@@ -32,6 +32,7 @@ const phoneticAlphabet = {
 };
 
 let currentCharacter = "";
+let blockSubmit = false;
 
 const App = () => {
   const [letterText, setLetterText] = useState("Current letter: ");
@@ -41,6 +42,10 @@ const App = () => {
   const getNextWord = () => {
     const words = Object.keys(phoneticAlphabet);
     const randomWord = words[Math.floor(Math.random() * words.length)];
+
+    if (randomWord === currentCharacter) {
+      return getNextWord();
+    }
 
     setLetterText(`Current Letter: ${randomWord.toUpperCase()}`);
     currentCharacter = randomWord;
@@ -60,6 +65,12 @@ const App = () => {
       return;
     }
 
+    if (blockSubmit) {
+      return;
+    }
+
+    blockSubmit = true;
+
     if (
       input.value.trim().toLowerCase() === phoneticAlphabet[currentCharacter]
     ) {
@@ -70,6 +81,8 @@ const App = () => {
       setTimeout(() => {
         input.value = "";
         input.className = "";
+
+        blockSubmit = false;
 
         getNextWord();
       }, 1000);
@@ -83,6 +96,8 @@ const App = () => {
       setTimeout(() => {
         input.value = "";
         input.className = "";
+
+        blockSubmit = false;
 
         getNextWord();
       }, 2000);
